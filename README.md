@@ -28,10 +28,12 @@ npm install
 MCP clients can start the server with `npx`:
 
 ```bash
-npx -y marvin-mini
+npx -y marvin-mini@latest
 ```
 
 This command is meant to be launched by an MCP client. If you run it directly in a terminal, marvin-mini prints a short usage message and exits, because stdio MCP servers wait for JSON-RPC messages from a client.
+
+Using `marvin-mini@latest` also avoids npm resolving a local source checkout named `marvin-mini` when your current directory is the project repository.
 
 Or install it globally and configure your MCP client to run `marvin-mini`:
 
@@ -55,13 +57,13 @@ Each marvin-mini tool allows Grok to use only the corresponding built-in Grok X 
 Run the MCP server over stdio:
 
 ```bash
-npx -y marvin-mini
+npx -y marvin-mini@latest
 ```
 
 If the MCP client starts marvin-mini from a non-login shell and cannot find `grok`, set `MARVIN_GROK_BIN` to the absolute Grok binary path:
 
 ```bash
-MARVIN_GROK_BIN=/absolute/path/to/grok npx -y marvin-mini
+MARVIN_GROK_BIN=/absolute/path/to/grok npx -y marvin-mini@latest
 ```
 
 The MCP server process must also have access to the same Grok login state. If a GUI client or service runs with a different `HOME`, `grok` may behave as if it is not logged in.
@@ -71,13 +73,13 @@ The MCP server process must also have access to the same Grok login state. If a 
 ### Codex CLI
 
 ```bash
-codex mcp add marvin-mini -- npx -y marvin-mini
+codex mcp add marvin-mini -- npx -y marvin-mini@latest
 ```
 
 With an explicit Grok binary:
 
 ```bash
-codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini@latest
 ```
 
 ### Claude Code
@@ -107,7 +109,7 @@ After npm publication, you can also use `npx` in MCP clients that support comman
   "mcpServers": {
     "marvin-mini": {
       "command": "npx",
-      "args": ["-y", "marvin-mini"],
+      "args": ["-y", "marvin-mini@latest"],
       "env": {
         "MARVIN_GROK_BIN": "/absolute/path/to/grok"
       }

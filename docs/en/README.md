@@ -39,10 +39,12 @@ npm install
 MCP clients can start the server with `npx`:
 
 ```bash
-npx -y marvin-mini
+npx -y marvin-mini@latest
 ```
 
 This command is meant to be launched by an MCP client. If you run it directly in a terminal, marvin-mini prints a short usage message and exits, because stdio MCP servers wait for JSON-RPC messages from a client.
+
+Using `marvin-mini@latest` also avoids npm resolving a local source checkout named `marvin-mini` when your current directory is the project repository.
 
 Or install it globally and configure your MCP client to run `marvin-mini`:
 
@@ -66,13 +68,13 @@ Each MCP tool allows Grok to use only the corresponding built-in X tool, reducin
 ### Codex CLI
 
 ```bash
-codex mcp add marvin-mini -- npx -y marvin-mini
+codex mcp add marvin-mini -- npx -y marvin-mini@latest
 ```
 
 If the client cannot find `grok`, explicitly set the Grok CLI path:
 
 ```bash
-codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini@latest
 ```
 
 ### Claude Code
@@ -102,7 +104,7 @@ After npm publication, MCP clients that support command arguments can use this s
   "mcpServers": {
     "marvin-mini": {
       "command": "npx",
-      "args": ["-y", "marvin-mini"],
+      "args": ["-y", "marvin-mini@latest"],
       "env": {
         "MARVIN_GROK_BIN": "/absolute/path/to/grok"
       }

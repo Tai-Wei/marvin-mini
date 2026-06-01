@@ -39,10 +39,12 @@ npm install
 MCP 客户端可以用 `npx` 启动 server：
 
 ```bash
-npx -y marvin-mini
+npx -y marvin-mini@latest
 ```
 
 这个命令应由 MCP 客户端启动。直接在终端里运行时，marvin-mini 会打印简短用法并退出；stdio MCP server 本身是在等待客户端发送 JSON-RPC 消息，不是交互式 CLI。
+
+使用 `marvin-mini@latest` 可以避免在项目源码目录中测试时，npm 误优先解析本地同名源码包。
 
 也可以全局安装，然后让 MCP 客户端执行 `marvin-mini`：
 
@@ -66,13 +68,13 @@ marvin-mini 暴露 4 个 MCP 工具：
 ### Codex CLI
 
 ```bash
-codex mcp add marvin-mini -- npx -y marvin-mini
+codex mcp add marvin-mini -- npx -y marvin-mini@latest
 ```
 
 如果客户端找不到 `grok`，请显式设置 Grok CLI 路径：
 
 ```bash
-codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini@latest
 ```
 
 ### Claude Code
@@ -102,7 +104,7 @@ codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y
   "mcpServers": {
     "marvin-mini": {
       "command": "npx",
-      "args": ["-y", "marvin-mini"],
+      "args": ["-y", "marvin-mini@latest"],
       "env": {
         "MARVIN_GROK_BIN": "/absolute/path/to/grok"
       }

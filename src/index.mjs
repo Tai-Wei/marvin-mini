@@ -3,11 +3,11 @@ if (process.stdin.isTTY) {
   console.error(`marvin-mini is an MCP stdio server, not an interactive CLI.
 
 Start it from an MCP client instead:
-  codex mcp add marvin-mini -- npx -y marvin-mini
+  codex mcp add marvin-mini -- npx -y marvin-mini@latest
 
 For JSON MCP client configs:
   "command": "npx",
-  "args": ["-y", "marvin-mini"]`);
+  "args": ["-y", "marvin-mini@latest"]`);
   process.exit(0);
 }
 
@@ -20,7 +20,7 @@ const [{ McpServer }, { StdioServerTransport }, { registerTools }] =
 
 const server = new McpServer({
   name: "marvin-mini",
-  version: "0.1.2",
+  version: "0.1.3",
 });
 
 registerTools(server);
