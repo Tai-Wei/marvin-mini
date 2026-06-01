@@ -36,17 +36,18 @@ npm install
 
 ## Installation
 
-After the package is published to npm, clients can run it directly with `npx`:
+MCP clients can start the server with `npx`:
 
 ```bash
 npx -y marvin-mini
 ```
 
-Or install it globally:
+This command is meant to be launched by an MCP client. If you run it directly in a terminal, marvin-mini prints a short usage message and exits, because stdio MCP servers wait for JSON-RPC messages from a client.
+
+Or install it globally and configure your MCP client to run `marvin-mini`:
 
 ```bash
 npm install -g marvin-mini
-marvin-mini
 ```
 
 ## MCP Tools

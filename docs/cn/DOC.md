@@ -52,11 +52,12 @@ marvin-mini/
 
 MCP server 入口，负责：
 
+- 交互终端直接运行时打印用法并退出
 - 创建 `McpServer`
 - 注册工具
 - 通过 `StdioServerTransport` 连接 MCP 客户端
 
-该文件不能向 stdout 写日志，否则会破坏 stdio MCP 协议。
+该文件不能向 stdout 写日志，否则会破坏 stdio MCP 协议。交互终端用法提示只写入 stderr。
 
 ### `src/tools.mjs`
 

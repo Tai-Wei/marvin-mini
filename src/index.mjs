@@ -1,11 +1,26 @@
 #!/usr/bin/env node
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerTools } from "./tools.mjs";
+if (process.stdin.isTTY) {
+  console.error(`marvin-mini is an MCP stdio server, not an interactive CLI.
+
+Start it from an MCP client instead:
+  codex mcp add marvin-mini -- npx -y marvin-mini
+
+For JSON MCP client configs:
+  "command": "npx",
+  "args": ["-y", "marvin-mini"]`);
+  process.exit(0);
+}
+
+const [{ McpServer }, { StdioServerTransport }, { registerTools }] =
+  await Promise.all([
+    import("@modelcontextprotocol/sdk/server/mcp.js"),
+    import("@modelcontextprotocol/sdk/server/stdio.js"),
+    import("./tools.mjs"),
+  ]);
 
 const server = new McpServer({
   name: "marvin-mini",
-  version: "0.1.0",
+  version: "0.1.1",
 });
 
 registerTools(server);

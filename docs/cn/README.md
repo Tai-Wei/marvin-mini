@@ -36,17 +36,18 @@ npm install
 
 ## 安装方式
 
-发布到 npm 后，客户端可以直接用 `npx` 运行：
+MCP 客户端可以用 `npx` 启动 server：
 
 ```bash
 npx -y marvin-mini
 ```
 
-也可以全局安装：
+这个命令应由 MCP 客户端启动。直接在终端里运行时，marvin-mini 会打印简短用法并退出；stdio MCP server 本身是在等待客户端发送 JSON-RPC 消息，不是交互式 CLI。
+
+也可以全局安装，然后让 MCP 客户端执行 `marvin-mini`：
 
 ```bash
 npm install -g marvin-mini
-marvin-mini
 ```
 
 ## MCP 工具

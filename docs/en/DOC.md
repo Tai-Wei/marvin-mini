@@ -52,11 +52,12 @@ marvin-mini/
 
 MCP server entry point. It is responsible for:
 
+- printing usage and exiting when run directly in an interactive terminal
 - creating the `McpServer`
 - registering tools
 - connecting to MCP clients through `StdioServerTransport`
 
-This file must not write logs to stdout, because stdout is used by the stdio MCP protocol.
+This file must not write logs to stdout, because stdout is used by the stdio MCP protocol. The interactive terminal usage message is written only to stderr.
 
 ### `src/tools.mjs`
 

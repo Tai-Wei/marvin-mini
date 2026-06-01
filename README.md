@@ -25,17 +25,18 @@ npm install
 
 ## Installation
 
-After the package is published to npm, clients can run it directly with `npx`:
+MCP clients can start the server with `npx`:
 
 ```bash
 npx -y marvin-mini
 ```
 
-Or install it globally:
+This command is meant to be launched by an MCP client. If you run it directly in a terminal, marvin-mini prints a short usage message and exits, because stdio MCP servers wait for JSON-RPC messages from a client.
+
+Or install it globally and configure your MCP client to run `marvin-mini`:
 
 ```bash
 npm install -g marvin-mini
-marvin-mini
 ```
 
 ## Tools
@@ -54,13 +55,13 @@ Each marvin-mini tool allows Grok to use only the corresponding built-in Grok X 
 Run the MCP server over stdio:
 
 ```bash
-node /absolute/path/to/marvin-mini/src/index.mjs
+npx -y marvin-mini
 ```
 
 If the MCP client starts marvin-mini from a non-login shell and cannot find `grok`, set `MARVIN_GROK_BIN` to the absolute Grok binary path:
 
 ```bash
-MARVIN_GROK_BIN=/absolute/path/to/grok node /absolute/path/to/marvin-mini/src/index.mjs
+MARVIN_GROK_BIN=/absolute/path/to/grok npx -y marvin-mini
 ```
 
 The MCP server process must also have access to the same Grok login state. If a GUI client or service runs with a different `HOME`, `grok` may behave as if it is not logged in.
