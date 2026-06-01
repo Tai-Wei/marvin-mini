@@ -63,10 +63,10 @@ This file must not write logs to stdout, because stdout is used by the stdio MCP
 
 Registers 4 MCP tools:
 
-- `x_keyword_search`
-- `x_semantic_search`
-- `x_user_search`
-- `x_thread_fetch`
+- `x_keyword_search`: keyword search that asks for visible text, date, author, and link
+- `x_semantic_search`: semantic search that asks for visible text, date, author, and link
+- `x_user_search`: user profile and recent-post search that asks for visible recent-post text, links, and quote/reply context
+- `x_thread_fetch`: thread fetch that asks for visible text, dates, authors, links, and replies
 
 Each tool is registered with `server.registerTool()` and describes its parameters with a Zod raw shape.
 

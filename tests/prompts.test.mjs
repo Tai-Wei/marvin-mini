@@ -17,7 +17,8 @@ test("buildKeywordPrompt quotes query and includes optional date filters", () =>
   assert.match(prompt, /Use x_keyword_search/);
   assert.match(prompt, /"Claude \\"Code\\"\\nworkflow"/);
   assert.match(prompt, /Filter: only posts from 2026-01-01 to 2026-01-31/);
-  assert.match(prompt, /post content, author handle, date, and link/);
+  assert.match(prompt, /exact visible post text/);
+  assert.match(prompt, /no visible text/);
 });
 
 test("prompt builders quote user-controlled fields", () => {
@@ -27,4 +28,13 @@ test("prompt builders quote user-controlled fields", () => {
     buildThreadPrompt({ post_url: "https://x.com/xai/status/123" }),
     /"https:\/\/x.com\/xai\/status\/123"/
   );
+});
+
+test("user prompt asks for recent post text and context", () => {
+  const prompt = buildUserPrompt({ username: "elonmusk" });
+
+  assert.match(prompt, /Recent posts, newest first/);
+  assert.match(prompt, /exact visible post text/);
+  assert.match(prompt, /emoji, punctuation, or a short word/);
+  assert.match(prompt, /quoted\/replied-to post text/);
 });

@@ -20,7 +20,7 @@ const [{ McpServer }, { StdioServerTransport }, { registerTools }] =
 
 const server = new McpServer({
   name: "marvin-mini",
-  version: "0.1.1",
+  version: "0.1.2",
 });
 
 registerTools(server);

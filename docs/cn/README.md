@@ -54,10 +54,10 @@ npm install -g marvin-mini
 
 marvin-mini 暴露 4 个 MCP 工具：
 
-- `x_keyword_search`: 按关键词搜索 X/Twitter 帖子
-- `x_semantic_search`: 按语义或自然语言意图搜索 X/Twitter 帖子
-- `x_user_search`: 搜索 X/Twitter 用户资料和近期帖子
-- `x_thread_fetch`: 获取某条 X/Twitter 帖子的完整线程
+- `x_keyword_search`: 按关键词搜索 X/Twitter 帖子，返回可见正文、时间、作者和链接
+- `x_semantic_search`: 按语义或自然语言意图搜索 X/Twitter 帖子，返回可见正文、时间、作者和链接
+- `x_user_search`: 搜索 X/Twitter 用户资料和近期帖子，尽量包含可见正文和链接
+- `x_thread_fetch`: 获取某条 X/Twitter 帖子的完整线程，包含可见正文、时间、作者、链接和回复
 
 每个 MCP 工具只允许 Grok 使用对应的一个内置 X 工具，避免 prompt 跑偏。
 

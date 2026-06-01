@@ -63,10 +63,10 @@ MCP server 入口，负责：
 
 注册 4 个 MCP 工具：
 
-- `x_keyword_search`
-- `x_semantic_search`
-- `x_user_search`
-- `x_thread_fetch`
+- `x_keyword_search`: 关键词搜索，要求返回可见正文、时间、作者和链接
+- `x_semantic_search`: 语义搜索，要求返回可见正文、时间、作者和链接
+- `x_user_search`: 用户资料和近期帖子搜索，要求近期帖子尽量包含可见正文、链接和引用/回复上下文
+- `x_thread_fetch`: 线程获取，要求返回可见正文、时间、作者、链接和回复
 
 每个工具使用 `server.registerTool()` 注册，并使用 Zod raw shape 描述参数。
 

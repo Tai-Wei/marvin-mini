@@ -26,7 +26,7 @@ export function registerTools(server) {
   server.registerTool(
     "x_keyword_search",
     {
-      description: "Search X/Twitter posts by keyword.",
+      description: "Search X/Twitter posts by keyword and return post text, dates, authors, and links.",
       inputSchema: {
         query: z.string().describe("Keyword search query"),
         from_date: z
@@ -47,7 +47,7 @@ export function registerTools(server) {
   server.registerTool(
     "x_semantic_search",
     {
-      description: "Search X/Twitter posts by meaning/intent using natural language.",
+      description: "Search X/Twitter posts by meaning/intent and return post text, dates, authors, and links.",
       inputSchema: {
         query: z.string().describe("Natural language search query"),
       },
@@ -58,7 +58,7 @@ export function registerTools(server) {
   server.registerTool(
     "x_user_search",
     {
-      description: "Search for an X/Twitter user's profile and recent posts.",
+      description: "Search for an X/Twitter user's profile and recent posts with visible post text and links.",
       inputSchema: {
         username: z.string().describe("X/Twitter username (without @)"),
       },
@@ -69,7 +69,7 @@ export function registerTools(server) {
   server.registerTool(
     "x_thread_fetch",
     {
-      description: "Fetch a full X/Twitter thread including all replies.",
+      description: "Fetch a full X/Twitter thread including visible post text, dates, authors, links, and replies.",
       inputSchema: {
         post_url: z.string().url().describe("URL of the X/Twitter post"),
       },

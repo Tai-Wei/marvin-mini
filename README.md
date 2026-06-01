@@ -43,10 +43,10 @@ npm install -g marvin-mini
 
 marvin-mini exposes four MCP tools:
 
-- `x_keyword_search`: search X/Twitter posts by keyword
-- `x_semantic_search`: search X/Twitter posts by meaning or intent
-- `x_user_search`: find an X/Twitter user profile and recent posts
-- `x_thread_fetch`: fetch a full X/Twitter thread
+- `x_keyword_search`: search X/Twitter posts by keyword, including visible post text, date, author, and link
+- `x_semantic_search`: search X/Twitter posts by meaning or intent, including visible post text, date, author, and link
+- `x_user_search`: find an X/Twitter user profile and recent posts, including visible post text and links when available
+- `x_thread_fetch`: fetch a full X/Twitter thread, including visible post text, dates, authors, links, and replies
 
 Each marvin-mini tool allows Grok to use only the corresponding built-in Grok X tool.
 
