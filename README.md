@@ -38,19 +38,52 @@ Using `marvin-mini@latest` also avoids npm resolving a local source checkout nam
 Or install it globally and configure your MCP client to run `marvin-mini`:
 
 ```bash
-npm install -g marvin-mini
+npm install -g marvin-mini@latest
 ```
 
 ## Tools
 
-marvin-mini exposes four MCP tools:
+marvin-mini exposes five MCP tools:
 
 - `x_keyword_search`: search X/Twitter posts by keyword, including visible post text, date, author, and link
 - `x_semantic_search`: search X/Twitter posts by meaning or intent, including visible post text, date, author, and link
 - `x_user_search`: find an X/Twitter user profile and recent posts, including visible post text and links when available
-- `x_thread_fetch`: fetch a full X/Twitter thread, including visible post text, dates, authors, links, and replies
+- `x_user_posts_search`: search posts from one X/Twitter user over a date range
+- `x_thread_fetch`: fetch X/Twitter thread context, including visible post text, dates, authors, links, and replies
 
 Each marvin-mini tool allows Grok to use only the corresponding built-in Grok X tool.
+
+`x_thread_fetch` accepts optional depth controls:
+
+```json
+{
+  "post_url": "https://x.com/user/status/123",
+  "mode": "summary | balanced | deep",
+  "max_posts": 50,
+  "timeout_seconds": 300
+}
+```
+
+For very long or high-engagement threads, start with `summary` or `balanced`, then run parallel `x_thread_fetch` calls on selected reply or quote URLs.
+
+## Parallel Search Strategy
+
+marvin-mini stays stateless and does not create agents internally. For broad searches, let the calling CLI split work across multiple agents or parallel tool calls.
+
+Recommended patterns:
+
+- Date sharding: for a three-day search, run one `x_user_posts_search` or `x_keyword_search` call per day, then merge, dedupe, and sort by time.
+- Tool sharding: run `x_user_search`, `x_keyword_search`, and `x_semantic_search` in parallel, then compare results.
+- Thread sharding: first fetch `summary` or `balanced` context, then fetch important reply or quote URLs in parallel.
+
+Example three-day user search:
+
+```text
+Agent A: x_user_posts_search(username="elonmusk", from_date="2026-05-30", to_date="2026-05-31")
+Agent B: x_user_posts_search(username="elonmusk", from_date="2026-05-31", to_date="2026-06-01")
+Agent C: x_user_posts_search(username="elonmusk", from_date="2026-06-01", to_date="2026-06-02")
+Main agent: merge, dedupe, sort, summarize, and keep source links
+```
 
 ## Usage
 
@@ -96,6 +129,13 @@ If you still want a larger cold-start window, set this in `~/.codex/config.toml`
 ```toml
 [mcp_servers.marvin-mini]
 startup_timeout_sec = 60
+```
+
+For long thread or multi-day searches, also increase the tool-call timeout:
+
+```toml
+[mcp_servers.marvin-mini]
+tool_timeout_sec = 300
 ```
 
 If you also need to set the Grok CLI path explicitly:

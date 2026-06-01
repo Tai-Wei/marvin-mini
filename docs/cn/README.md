@@ -49,19 +49,52 @@ npx -y marvin-mini@latest
 也可以全局安装，然后让 MCP 客户端执行 `marvin-mini`：
 
 ```bash
-npm install -g marvin-mini
+npm install -g marvin-mini@latest
 ```
 
 ## MCP 工具
 
-marvin-mini 暴露 4 个 MCP 工具：
+marvin-mini 暴露 5 个 MCP 工具：
 
 - `x_keyword_search`: 按关键词搜索 X/Twitter 帖子，返回可见正文、时间、作者和链接
 - `x_semantic_search`: 按语义或自然语言意图搜索 X/Twitter 帖子，返回可见正文、时间、作者和链接
 - `x_user_search`: 搜索 X/Twitter 用户资料和近期帖子，尽量包含可见正文和链接
-- `x_thread_fetch`: 获取某条 X/Twitter 帖子的完整线程，包含可见正文、时间、作者、链接和回复
+- `x_user_posts_search`: 搜索某个 X/Twitter 用户在指定日期范围内的帖子
+- `x_thread_fetch`: 获取某条 X/Twitter 帖子的线程上下文，包含可见正文、时间、作者、链接和回复
 
 每个 MCP 工具只允许 Grok 使用对应的一个内置 X 工具，避免 prompt 跑偏。
+
+`x_thread_fetch` 支持可选深度控制：
+
+```json
+{
+  "post_url": "https://x.com/user/status/123",
+  "mode": "summary | balanced | deep",
+  "max_posts": 50,
+  "timeout_seconds": 300
+}
+```
+
+对于很长或互动量很高的线程，建议先用 `summary` 或 `balanced` 获取上下文，再对重要回复或引用链接并行调用 `x_thread_fetch`。
+
+## 并行搜索策略
+
+marvin-mini 保持无状态，不在 MCP server 内部创建 agents。宽范围搜索应交给调用方 CLI 拆分成多个 agents 或并行工具调用。
+
+推荐模式：
+
+- 日期分片：查三天内容时，每个 agent 查一天，然后由主 agent 合并、去重并按时间排序。
+- 工具分片：并行调用 `x_user_search`、`x_keyword_search`、`x_semantic_search`，再交叉比较结果。
+- 线程分片：先抓 `summary` 或 `balanced` 上下文，再对关键回复或引用链接并行深挖。
+
+三天用户帖子搜索示例：
+
+```text
+Agent A: x_user_posts_search(username="elonmusk", from_date="2026-05-30", to_date="2026-05-31")
+Agent B: x_user_posts_search(username="elonmusk", from_date="2026-05-31", to_date="2026-06-01")
+Agent C: x_user_posts_search(username="elonmusk", from_date="2026-06-01", to_date="2026-06-02")
+Main agent: 合并、去重、按时间排序、总结，并保留来源链接
+```
 
 ## 客户端配置
 
@@ -91,6 +124,13 @@ codex mcp add marvin-mini -- /absolute/path/from/command-v
 ```toml
 [mcp_servers.marvin-mini]
 startup_timeout_sec = 60
+```
+
+长线程或多天检索还应调高工具调用超时：
+
+```toml
+[mcp_servers.marvin-mini]
+tool_timeout_sec = 300
 ```
 
 如果同时需要显式指定 Grok CLI 路径：

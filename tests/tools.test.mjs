@@ -13,7 +13,7 @@ class FakeServer {
   }
 }
 
-test("registerTools registers the four expected tools", () => {
+test("registerTools registers the five expected tools", () => {
   const server = new FakeServer();
   registerTools(server);
 
@@ -21,6 +21,7 @@ test("registerTools registers the four expected tools", () => {
     "x_keyword_search",
     "x_semantic_search",
     "x_user_search",
+    "x_user_posts_search",
     "x_thread_fetch",
   ]);
 });
@@ -48,8 +49,32 @@ test("tool schemas validate expected inputs", () => {
 
   const threadSchema = z.object(server.tools.get("x_thread_fetch").config.inputSchema);
   assert.equal(
-    threadSchema.safeParse({ post_url: "https://x.com/xai/status/123" }).success,
+    threadSchema.safeParse({
+      post_url: "https://x.com/xai/status/123",
+      mode: "deep",
+      max_posts: 120,
+      timeout_seconds: 300,
+    }).success,
     true
   );
   assert.equal(threadSchema.safeParse({ post_url: "not-a-url" }).success, false);
+  assert.equal(
+    threadSchema.safeParse({
+      post_url: "https://x.com/xai/status/123",
+      mode: "everything",
+    }).success,
+    false
+  );
+
+  const userPostsSchema = z.object(server.tools.get("x_user_posts_search").config.inputSchema);
+  assert.equal(
+    userPostsSchema.safeParse({
+      username: "@elonmusk",
+      from_date: "2026-06-01",
+      to_date: "2026-06-02",
+      max_results: 20,
+    }).success,
+    true
+  );
+  assert.equal(userPostsSchema.safeParse({ username: "not a handle" }).success, false);
 });

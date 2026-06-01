@@ -5,6 +5,7 @@ import {
   buildSemanticPrompt,
   buildThreadPrompt,
   buildUserPrompt,
+  buildUserPostsPrompt,
 } from "../src/prompts.mjs";
 
 test("buildKeywordPrompt quotes query and includes optional date filters", () => {
@@ -24,10 +25,36 @@ test("buildKeywordPrompt quotes query and includes optional date filters", () =>
 test("prompt builders quote user-controlled fields", () => {
   assert.match(buildSemanticPrompt({ query: "AI\nnews" }), /"AI\\nnews"/);
   assert.match(buildUserPrompt({ username: 'xai"' }), /"xai\\""/);
+  assert.match(buildUserPostsPrompt({ username: "xai" }), /"xai"/);
   assert.match(
     buildThreadPrompt({ post_url: "https://x.com/xai/status/123" }),
     /"https:\/\/x.com\/xai\/status\/123"/
   );
+});
+
+test("user posts prompt builds a from-user date search", () => {
+  const prompt = buildUserPostsPrompt({
+    username: "@elonmusk",
+    from_date: "2026-06-01",
+    to_date: "2026-06-02",
+    max_results: 20,
+  });
+
+  assert.match(prompt, /from:elonmusk since:2026-06-01 until:2026-06-02/);
+  assert.match(prompt, /Return at most 20 posts/);
+  assert.match(prompt, /newest posts first/);
+});
+
+test("thread prompt includes mode and result limit", () => {
+  const prompt = buildThreadPrompt({
+    post_url: "https://x.com/xai/status/123",
+    mode: "summary",
+    max_posts: 20,
+  });
+
+  assert.match(prompt, /Mode: summary/);
+  assert.match(prompt, /Maximum visible posts to return: 20/);
+  assert.match(prompt, /not an exhaustive dump/);
 });
 
 test("user prompt asks for recent post text and context", () => {

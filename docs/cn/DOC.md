@@ -61,14 +61,27 @@ MCP server 入口，负责：
 
 ### `src/tools.mjs`
 
-注册 4 个 MCP 工具：
+注册 5 个 MCP 工具：
 
 - `x_keyword_search`: 关键词搜索，要求返回可见正文、时间、作者和链接
 - `x_semantic_search`: 语义搜索，要求返回可见正文、时间、作者和链接
 - `x_user_search`: 用户资料和近期帖子搜索，要求近期帖子尽量包含可见正文、链接和引用/回复上下文
-- `x_thread_fetch`: 线程获取，要求返回可见正文、时间、作者、链接和回复
+- `x_user_posts_search`: 某个用户在日期范围内的帖子搜索，用于多天检索的日期分片
+- `x_thread_fetch`: 线程上下文获取，支持 `summary`、`balanced`、`deep` 深度模式和结果上限
 
 每个工具使用 `server.registerTool()` 注册，并使用 Zod raw shape 描述参数。
+
+`x_thread_fetch` 的可选参数：
+
+```json
+{
+  "mode": "summary | balanced | deep",
+  "max_posts": 50,
+  "timeout_seconds": 300
+}
+```
+
+`timeout_seconds` 只控制 marvin-mini 内部 Grok 子进程的总超时。MCP 客户端如果也有工具调用超时，仍需要在客户端配置中调高。
 
 工具执行失败时会返回 MCP tool error：
 
@@ -93,8 +106,9 @@ MCP server 入口，负责：
 - 默认执行 `grok`
 - 支持 `MARVIN_GROK_BIN` 覆盖 Grok CLI 路径
 - 固定使用 `--output-format json`
-- 单次调用最多运行 120 秒
-- stdout 上限 512KB
+- 默认单次调用最多运行 120 秒，线程工具可通过 `timeout_seconds` 提高到最多 600 秒
+- 支持总超时和 stdout/stderr 空闲超时；只要 Grok 持续输出活动，就不会被空闲超时提前结束
+- stdout 上限 1MB
 - stderr 只保留最后 8192 字符
 - 校验 Grok JSON 输出必须包含字符串类型的 `text` 字段
 
@@ -103,6 +117,17 @@ MCP server 入口，负责：
 构造传给 Grok CLI 的 prompt。
 
 用户输入会使用 `JSON.stringify(...)` 包裹，降低引号、换行等字符造成 prompt 混乱的风险。
+
+## 并行编排建议
+
+marvin-mini 不在 MCP server 内部创建 agents。多 agents 并行应由调用方 CLI 负责。
+
+建议模式：
+
+- 多天检索按日期分片，例如三天内容拆成三个 `x_user_posts_search` 或 `x_keyword_search` 调用。
+- 宽主题检索按工具分片，例如同时运行用户搜索、关键词搜索、语义搜索。
+- 长线程先用 `summary` 或 `balanced` 获取上下文，再对关键回复或引用链接并行调用 `x_thread_fetch`。
+- 主 agent 负责合并、去重、按时间排序、保留来源链接并输出总结。
 
 ## 环境变量
 
