@@ -34,6 +34,21 @@ Install dependencies:
 npm install
 ```
 
+## Installation
+
+After the package is published to npm, clients can run it directly with `npx`:
+
+```bash
+npx -y marvin-mini
+```
+
+Or install it globally:
+
+```bash
+npm install -g marvin-mini
+marvin-mini
+```
+
 ## MCP Tools
 
 marvin-mini exposes 4 MCP tools:
@@ -50,13 +65,13 @@ Each MCP tool allows Grok to use only the corresponding built-in X tool, reducin
 ### Codex CLI
 
 ```bash
-codex mcp add marvin-mini -- node /absolute/path/to/marvin-mini/src/index.mjs
+codex mcp add marvin-mini -- npx -y marvin-mini
 ```
 
 If the client cannot find `grok`, explicitly set the Grok CLI path:
 
 ```bash
-codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- node /absolute/path/to/marvin-mini/src/index.mjs
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini
 ```
 
 ### Claude Code
@@ -78,6 +93,22 @@ Add this to `~/.claude/settings.json` or project `.claude/settings.json`:
 ```
 
 If `grok` is already in the MCP server process `PATH`, the `env` block can be omitted.
+
+After npm publication, MCP clients that support command arguments can use this shape:
+
+```json
+{
+  "mcpServers": {
+    "marvin-mini": {
+      "command": "npx",
+      "args": ["-y", "marvin-mini"],
+      "env": {
+        "MARVIN_GROK_BIN": "/absolute/path/to/grok"
+      }
+    }
+  }
+}
+```
 
 ## Notes
 

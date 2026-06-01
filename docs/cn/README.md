@@ -34,6 +34,21 @@ marvin-mini 适合只需要 X/Twitter 搜索能力的 MCP 客户端，例如：
 npm install
 ```
 
+## 安装方式
+
+发布到 npm 后，客户端可以直接用 `npx` 运行：
+
+```bash
+npx -y marvin-mini
+```
+
+也可以全局安装：
+
+```bash
+npm install -g marvin-mini
+marvin-mini
+```
+
 ## MCP 工具
 
 marvin-mini 暴露 4 个 MCP 工具：
@@ -50,13 +65,13 @@ marvin-mini 暴露 4 个 MCP 工具：
 ### Codex CLI
 
 ```bash
-codex mcp add marvin-mini -- node /absolute/path/to/marvin-mini/src/index.mjs
+codex mcp add marvin-mini -- npx -y marvin-mini
 ```
 
 如果客户端找不到 `grok`，请显式设置 Grok CLI 路径：
 
 ```bash
-codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- node /absolute/path/to/marvin-mini/src/index.mjs
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini
 ```
 
 ### Claude Code
@@ -78,6 +93,22 @@ codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- node /
 ```
 
 如果 `grok` 已经在 MCP server 进程的 `PATH` 中，`env` 可以省略。
+
+发布到 npm 后，支持 command/args 的 MCP 客户端也可以使用：
+
+```json
+{
+  "mcpServers": {
+    "marvin-mini": {
+      "command": "npx",
+      "args": ["-y", "marvin-mini"],
+      "env": {
+        "MARVIN_GROK_BIN": "/absolute/path/to/grok"
+      }
+    }
+  }
+}
+```
 
 ## 注意事项
 
