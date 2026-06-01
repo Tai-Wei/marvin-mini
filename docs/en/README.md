@@ -77,6 +77,28 @@ If the client cannot find `grok`, explicitly set the Grok CLI path:
 codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini@latest
 ```
 
+If Codex reports an MCP startup timeout, use the globally installed command to avoid going through `npx` on every startup:
+
+```bash
+npm install -g marvin-mini@latest
+command -v marvin-mini
+codex mcp remove marvin-mini
+codex mcp add marvin-mini -- /absolute/path/from/command-v
+```
+
+If you still want a larger cold-start window, set this in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.marvin-mini]
+startup_timeout_sec = 60
+```
+
+If you also need to set the Grok CLI path explicitly:
+
+```bash
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- /absolute/path/from/command-v
+```
+
 ### Claude Code
 
 Add this to `~/.claude/settings.json` or project `.claude/settings.json`:

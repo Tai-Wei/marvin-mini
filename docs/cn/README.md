@@ -77,6 +77,28 @@ codex mcp add marvin-mini -- npx -y marvin-mini@latest
 codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- npx -y marvin-mini@latest
 ```
 
+如果 Codex 报 MCP 启动超时，可以改用全局安装后的本机命令，避免每次启动都经过 `npx`：
+
+```bash
+npm install -g marvin-mini@latest
+command -v marvin-mini
+codex mcp remove marvin-mini
+codex mcp add marvin-mini -- /absolute/path/from/command-v
+```
+
+如果仍想给冷启动留更长时间，可以在 `~/.codex/config.toml` 中设置：
+
+```toml
+[mcp_servers.marvin-mini]
+startup_timeout_sec = 60
+```
+
+如果同时需要显式指定 Grok CLI 路径：
+
+```bash
+codex mcp add marvin-mini --env MARVIN_GROK_BIN=/absolute/path/to/grok -- /absolute/path/from/command-v
+```
+
 ### Claude Code
 
 在 `~/.claude/settings.json` 或项目 `.claude/settings.json` 中添加：
